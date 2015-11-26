@@ -1,0 +1,6 @@
+---
+applications:
+- name: FilmBase
+  memory: 512M
+  services:
+  - mongoFilmBase

@@ -1,0 +1,25 @@
+extends layout
+append scripts
+    script(src='/js/filmpage_function.js')
+
+block body
+    +navbar-fixed("Project name","navbar","inverse")
+        +nav_item("/") Home
+        +nav_item("/all", 'active') Film List
+        +nav_item("/newfilm") Add film
+        input(type="hidden", id="id", name="id", value="#{id}")
+    .container
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,43 @@
+extends layout
+append body
+
+    .container
+
+           h2 Dodaj nowy film:
+           .container
+               form.form-horizontal(class="form-horizontal", name="addfilm", id="addfilm" method="post", enctype="multipart/form-data", action="/addfilm" )
+                   .form-group
+                        label.control-label.col-sm-2(for="name")|Tytul:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Title", name="name" required)
+                   .form-group
+                        label.control-label.col-sm-2(for="name")|Gatunek:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Genre", name="genre" required)
+                    .form-group
+                        label.control-label.col-sm-2(for="name")|Kraj:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Kraj", name="country" required)
+                    .form-group
+                        label.control-label.col-sm-2(for="name")|Rok:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Rok", name="year" required)
+                     .form-group
+                         label.control-label.col-sm-2(for="details")| Details:
+                         .col-sm-3
+                             textarea.form-control(type="text", placeholder="Details", name="details")
+                    .form-group
+                        label.control-label.col-sm-2
+                        .col-sm-3
+                            input.form-control(type="file", name="photo", accept="image/*" )
+                    .form-group
+                        .col-sm-3.text-right
+
+                        .col-sm-2.text-right
+                            input.btn.btn-success(type="submit" value='Submit')
+            col-sm-4.text-right
+                    a.btn.btn-info(href="/all" ) Powrot
+
+
+
+

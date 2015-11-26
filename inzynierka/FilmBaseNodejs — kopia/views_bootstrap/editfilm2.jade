@@ -1,0 +1,32 @@
+extends layout
+append scripts
+    script(src='/js/edit_function.js')
+block body
+    +navbar-fixed("Project name","navbar","inverse")
+        +nav_item("/") Home
+        +nav_item("/logIndex") Film List
+        +nav_item("/newfilm", 'active') Add film
+    .container
+        .form-style-8
+           h2 Edytuj film:
+           form(method="post", enctype="multipart/form-data", action="/editfilm/#{id}" )
+             input(type="hidden", id="id", name="id", value="#{id}")
+             br
+             input(type="text", placeholder="Title", name="name" required)
+             br
+             input(type="text", placeholder="Genre", name="genre" required)
+             br
+             input(type="text", placeholder="Year", name="year" required)
+             br
+             input(type="text", placeholder="Country", name="country" required)
+             br
+             input(type="text", placeholder="Details", name="details")
+             br
+             input(type="file", name="photo")
+             br
+             input(type="submit" value='Submit')
+
+        #backButton
+          a(href='/') << Powrot
+
+    

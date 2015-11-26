@@ -1,0 +1,81 @@
+extends layout
+append scripts
+    script(src='/js/edit_function.js')
+block body
+    //a.btn.btn-success.linkeditfilm(href='') Submit
+    .navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+        .container
+            .navbar-header
+                button(type="button" ,class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar" ,aria-expanded="false", aria-controls="navbar")
+                    span.sr-only Toggle navigation
+                    span.icon-bar
+                    span.icon-bar
+                    span.icon-bar
+                a(class="navbar-brand", href="#") FilmBase
+            #navbar.navbar-collapse.collapse
+                ul.nav.navbar-nav
+                    li.active
+                        a(href="/") Home
+                    li
+                        a(href="/all") List
+                    li
+                        a(href="/newfilm") Add film
+                ul.nav.navbar-nav.navbar-right
+                    -if (user){
+                        li
+                            a(href="#{user._json.link}")
+                                img.img-circle(src="#{user._json.picture}", width="20px")
+                                |  #{user._json.name}
+                        li
+                            a(href="/logout")
+                                span.glyphicon.glyphicon-log-out
+                                |  Wyloguj
+                    -}   else {
+                        li
+                            a(href="/auth/google")
+                                span.glyphicon.glyphicon-log-in
+                                |  Login via google
+                    -}
+
+
+
+    .container
+           h2 Dodaj nowy film:
+           .container
+               form.form-horizontal(class="form-horizontal", name="addfilm", id="addfilm", method="post" , action="/editfilm/#{id}", enctype="multipart/form-data" )
+                   input(type="hidden", id="id", name="id", value="#{id}")
+                   .form-group
+                        label.control-label.col-sm-2(for="name")|Tytul:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Title", name="name" required)
+                   .form-group
+                        label.control-label.col-sm-2(for="name")|Gatunek:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Genre", name="genre" required)
+                    .form-group
+                        label.control-label.col-sm-2(for="name")|Kraj:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Kraj", name="country" required)
+                    .form-group
+                        label.control-label.col-sm-2(for="name")|Rok:
+                        .col-sm-3
+                            input.form-control(type="text", placeholder="Rok", name="year" required)
+                     .form-group
+                         label.control-label.col-sm-2(for="details")| Details:
+                         .col-sm-3
+                             textarea.form-control(type="text", placeholder="Details", name="details")
+                    .form-group
+                        label.control-label.col-sm-2
+                        .col-sm-3
+                            input.form-control(type="file", name="photo", accept="image/*" )
+                    .form-group
+                        .col-sm-3.text-right
+
+                        .col-sm-2.text-right
+                            input.btn.btn-success(type='submit' )
+            col-sm-4.text-right
+                    a.btn.btn-info(href="/all" ) Powrot
+
+
+
+

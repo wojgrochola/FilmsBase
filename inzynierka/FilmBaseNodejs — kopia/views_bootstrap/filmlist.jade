@@ -1,0 +1,36 @@
+extends layout
+
+append body
+
+    .container
+        .starter-template
+
+            h1.text-left Filmy zapisane w bazie:
+        -if(added)
+            .alert.alert-success.fade.in("style=text-align: left;, ")
+                a(href="", class="close", data-dismiss="alert", aria-label="close") &times;
+                strong Operacja udana!
+                | Dodano nowy film do bazy.
+        -else if(edited)
+            .alert.alert-success.fade.in("style=text-align: left;, ")
+                a(href="#", class="close", data-dismiss="alert", aria-label="close") &times;
+                strong Gratulacje!
+                | Zostales poprawnie zalogowany!
+        table.table.table-hover
+            thead
+                th
+                th Tytul
+                th Rok
+                th Gatunek
+                th Kraj
+                th
+                th
+            tbody
+
+
+
+
+
+
+
+

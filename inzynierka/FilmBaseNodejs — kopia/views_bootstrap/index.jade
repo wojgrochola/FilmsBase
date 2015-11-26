@@ -1,0 +1,97 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+append styles
+    // Custom styles for this template
+    link(href="../css/carousel.css", rel="stylesheet")
+append scripts
+    script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+    script(src='/js/index_function.js')
+block body
+    .navbar-wrapper
+        .container
+
+            nav.navbar.navbar-inverse.navbar-static-top
+                .container
+                    .navbar-header
+                        button(type="button" ,class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar" ,aria-expanded="false", aria-controls="navbar")
+                            span.sr-only Toggle navigation
+                            span.icon-bar
+                            span.icon-bar
+                            span.icon-bar
+                        a(class="navbar-brand", href="#") FilmBase
+                    #navbar.navbar-collapse.collapse
+                        ul.nav.navbar-nav
+                            li.active
+                                a(href="/") Home
+                            li
+                                a(href="/all") List
+                            li
+                                a(href="/newfilm") Add film
+                        ul.nav.navbar-nav.navbar-right
+                            -if (user){
+                                li
+                                    a(href="#{user._json.link}")
+                                        img.img-circle(src="#{user._json.picture}", width="20px")
+                                        |  #{user._json.name}
+                                li
+                                    a(href="/logout")
+                                        span.glyphicon.glyphicon-log-out
+                                        |  Wyloguj
+                            -}   else {
+                                li
+                                    a(href="/auth/google")
+                                        span.glyphicon.glyphicon-log-in
+                                        |  Login via google
+                            -}
+
+            -if(unlogged)
+                .alert.alert-danger.fade.in("style=text-align: left;, ")
+                    a(href="#", class="close", data-dismiss="alert", aria-label="close") &times;
+                    strong Dostep zabroniony!
+                    | Aby kontynuowac, musisz byc zalogowany. Zaloguj za pomoca konta Google, lub konta na Facebooku.
+            -else if(logged)
+                .alert.alert-success.fade.in("style=text-align: left;, ")
+                    a(href="#", class="close", data-dismiss="alert", aria-label="close") &times;
+                    strong Gratulacje!
+                    | Zostales poprawnie zalogowany!
+            -else if(logout)
+                .alert.alert-info.fade.in("style=text-align: left;, ")
+                    a(href="#", class="close", data-dismiss="alert", aria-label="close") &times;
+                    strong Gratulacje!
+                    | Zostales poprawnie wylogowany!
+
+
+    // Carousel
+    // ==================================================
+    +carousel("myCarousel",[{
+        image: "../images/carousel1.jpg",
+
+    }, {
+        image: "../images/carousel2.jpg",
+
+    }, {
+        image: "../images/carousel3.jpg",
+       
+    }])
+    //  Marketing messaging and featurettes
+    //  ==================================================
+    // Wrap the rest of the page in another container to center all the content.
+
+    .container.marketing
+        .panel.panel-default
+            .panel-heading
+                h3 Ostatnio dodane
+            .panel-body
+                .row
+
+
+
+        // /END THE FEATURETTES
+        // FOOTER
+        footer
+            p.pull-right
+                a(href='#') Back to top
+
+
+
+
+
