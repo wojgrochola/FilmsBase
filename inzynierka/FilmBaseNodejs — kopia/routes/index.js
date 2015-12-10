@@ -1,9 +1,10 @@
-var express = require('express');
-var router = express.Router();
+var express     = require('express');
+var router      = express.Router();
 var passport 	= require('passport');
-
-
+var multer      = require('multer')
+var upload      = multer({ dest: 'public/images' })
 require('../config/passport')(passport);
+
 
 function ensureAuthenticated(req, res, next) {
 	if (req.isAuthenticated()) { return next(); }
@@ -12,10 +13,6 @@ function ensureAuthenticated(req, res, next) {
 
 
 
-
-router.get('/helloworld', function(req, res) {
-	res.render('helloworld', {title: 'Hello world!' });
-});
 
 router.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
@@ -41,43 +38,30 @@ router.get('/logout', function(req, res){
     res.render('index', {logout: req.flash('info')});
 });
 
-/* GET Userlist page. */
+
 router.get('/', function(req, res) {
-    var db = req.db;
-    var collection = db.get('films');
-    var passport = req.db;
-    console.log(req.user)
-
-
     res.render('index', {user: req.user})
 });
 
 
 router.get('/all', ensureAuthenticated,  function(req, res) {
-    console.log(Date());
-    var db = req.db;
-    var collection = db.get('films');
-    var passport = req.db;
-
-    collection.find({},{},function(e, docs){
-    	     res.render('filmlist', { user: req.user
-        });
-    });
-    //console.log("pobrano");
+	     res.render('filmlist', { user: req.user })
 });
 
-router.get('/filmlist/sorteddate', ensureAuthenticated,  function(req, res) {
+router.get('/filmlist/sorteddate',   function(req, res) {
     var db = req.db;
     var collection = db.get('films');
     collection.find( { $query: {}, $orderby: { date : -1 } }, {}, function(e, docs) {
-        res.json(docs);
+        if (e)
+            res.send(e)
+        else
+            res.json(docs);
     });
 });
 
 router.get('/filmlist', ensureAuthenticated,   function(req, res) {
 	  var db = req.db;
 	  var collection = db.get('films');
-	  //collection.find( { $query: {}, $orderby: { date : 1 } }, {}, function(e, docs) {
       collection.find( {}, {}, function(e, docs) {
 		  res.json(docs);
 	  });
@@ -126,4 +110,89 @@ router.get('/filmpage/:id', ensureAuthenticated, function(req, res) {
         "id" : id
     })
 });
+
+
+router.post('/addfilm',upload.single('photo'),  function (req, res, next) {
+    console.log(req.file);
+    console.log("in");
+    var db = req.db;
+    if (req.file)
+        var filename = req.file.filename;
+    else
+        var filename = "noimg.jpg";
+    console.log(filename);
+    var name = req.body.name;
+    var genre = req.body.genre;
+    var year = req.body.year;
+    var country = req.body.country;
+    var details = req.body.details;
+
+    var collection = db.get('films');
+
+    collection.insert({
+        "name" : name,
+        "genre" : genre,
+        "year" : year,
+        "country" : country,
+        "filename": filename,
+        "details" : details,
+        "date" : new Date()
+    }, function (err, doc) {
+        if (err) {
+
+            res.send("Something get wrong!");
+        }
+        else {
+
+            req.flash('added', "Dodano film do bazy!");
+            res.render('filmlist', {added: req.flash('added')});
+
+        }
+    });
+
+    console.log("add");
+})
+
+router.post('/editfilm/:_id',upload.single('photo'),  function (req, res, next) {
+    var db = req.db;
+    if (req.file)
+        var filename = req.file.filename;
+    else
+        var filename = "noimg.jpg";
+    console.log(filename);
+    var id = req.params._id;
+    var name = req.body.name;
+    var genre = req.body.genre;
+    var year = req.body.year;
+    var country = req.body.country;
+    var details = req.body.details;
+
+    var collection = db.get('films');
+
+    collection.update( { '_id': id}, {
+        "name": name,
+        "genre": genre,
+        "year": year,
+        "country": country,
+        "filename": filename,
+        "details": details,
+        "date": new Date()
+    },
+       function (err, doc) {
+           if (err) {
+
+               res.send("Something get wrong!");
+           }
+           else {
+
+               res.redirect("/all");
+
+           }
+
+    });
+
+
+})
+
+
 module.exports = router;

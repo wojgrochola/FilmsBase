@@ -6,67 +6,26 @@ var cookieParser 	= require('cookie-parser');
 var bodyParser 		= require('body-parser');
 var session      	= require('express-session');
 
-var configDB 	= require('./config/database.js');
-var mongo 		= require('mongodb');
-var monk 		= require('monk');
-var passport 	= require('passport');
-var flash    	= require('connect-flash');
-var multer  = require('multer')
-var upload = multer({ dest: 'public/images' })
-//
-//console.log('VCAP SERVICES: ' + JSON.stringify(process.env.VCAP_SERVICES, null, 4));
-//    var mongoUrl;
-//    if(process && process.env && process.env.VCAP_SERVICES) {
-//      var vcapServices = JSON.parse(process.env.VCAP_SERVICES);
-//      for (var svcName in vcapServices) {
-//        if (svcName.match(/^mongo.*/)) {
-//          mongoUrl = vcapServices[svcName][0].credentials.uri;
-//          mongoUrl = mongoUrl || vcapServices[svcName][0].credentials.url;
-//          break;
-//        }
-//      }
-//    } else {
-//      mongoUrl = "localhost:27017/nodetest1";
-//    }
-//    console.log('Mongo URL: ' + mongoUrl);
+var monk 		    = require('monk');
+var passport 	    = require('passport');
+require('./config/passport')(passport); // pass passport for configuration
+var conn_str        = require('./config/database');
+var flash    	    = require('connect-flash');
 
-var mongo = process.env.VCAP_SERVICES;
-var port = process.env.PORT || 3030;
-var conn_str = "";
-if (mongo) {
-    var env = JSON.parse(mongo);
-    if (env['mongodb-2.4']) {
-        mongo = env['mongodb-2.4'][0]['credentials'];
-        if (mongo.url) {
-            conn_str = mongo.url;
-        } else {
-            console.log("No mongo found");
-        }
-    } else {
-        conn_str = 'mongodb://localhost:27017';
-    }
-} else {
-    conn_str = 'mongodb://localhost:27017';
-}
 
-console.log(conn_str)
 
+console.log(conn_str);
 var db 			= monk(conn_str);
 
 var routes 		= require('./routes/index');
-var users 		= require('./routes/users');
 
 var app = express();
 
-require('./config/passport')(passport); // pass passport for configuration
-
-// view engine setup
 app.set('views', path.join(__dirname, 'views_bootstrap'));
 app.set('view engine', 'jade');
 
 
 app.use(cookieParser());
-//required for passport
 app.use(session({ secret: 'sesja' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -91,88 +50,6 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 
-app.post('/addfilm',upload.single('photo'),  function (req, res, next) {
-    console.log(req.file);
-    console.log("in");
-    var db = req.db;
-    if (req.file)
-        var filename = req.file.filename;
-    else
-        var filename = "noimg.jpg";
-    console.log(filename);
-    var name = req.body.name;
-    var genre = req.body.genre;
-    var year = req.body.year;
-    var country = req.body.country;
-    var details = req.body.details;
-
-    var collection = db.get('films');
-
-    collection.insert({
-        "name" : name,
-        "genre" : genre,
-        "year" : year,
-        "country" : country,
-        "filename": filename,
-        "details" : details,
-        "date" : new Date()
-    }, function (err, doc) {
-        if (err) {
-
-            res.send("Something get wrong!");
-        }
-        else {
-
-            req.flash('added', "Dodano film do bazy!");
-            res.render('filmlist', {added: req.flash('added')});
-
-        }
-    });
-
-    console.log("add");
-})
-
-
-app.post('/editfilm/:_id',upload.single('photo'),  function (req, res, next) {
-    var db = req.db;
-    if (req.file)
-        var filename = req.file.filename;
-    else
-        var filename = "noimg.jpg";
-    console.log(filename);
-    var id = req.params._id;
-    var name = req.body.name;
-    var genre = req.body.genre;
-    var year = req.body.year;
-    var country = req.body.country;
-    var details = req.body.details;
-
-    var collection = db.get('films');
-
-    collection.update( { '_id': id}, {
-        "name": name,
-        "genre": genre,
-        "year": year,
-        "country": country,
-        "filename": filename,
-        "details": details,
-        "date": new Date()
-    },
-       function (err, doc) {
-           if (err) {
-
-               res.send("Something get wrong!");
-           }
-           else {
-
-               res.redirect("/all");
-
-           }
-
-    });
-
-
-})
 
 
 

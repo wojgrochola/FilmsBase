@@ -18,8 +18,8 @@ module.exports = {
     'googleAuth' : {
         'clientID'      : '259321333966-crqjuni2494ubjlhhhlg6sgj25dbq26n.apps.googleusercontent.com',
         'clientSecret'  : 'ayaYl9LJ5eCUUjKWAImu-ojA',
-        'callbackURL'   : 'http://tmp123.mybluemix.net/auth/google/callback'
-        //'callbackURL'   : 'http://filmsbase.mybluemix.net/auth/google/callback'
+        //'callbackURL'   : 'http://tmp123.mybluemix.net/auth/google/callback'
+        'callbackURL'   : 'http://filmsbase.mybluemix.net/auth/google/callback'
         //'callbackURL'   : 'http://localhost:3000/auth/google/callback'
     }
 
